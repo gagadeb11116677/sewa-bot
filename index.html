@@ -1,922 +1,434 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SEWA BOT WhatsApp, XOBE</title>
+<meta name="theme-color" content="#05060a">
+<title>Sewa Bot WhatsApp Premium | XOBE</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
---dark:#060a12;
---surface:rgba(12,18,32,.92);
---surface-2:rgba(255,255,255,.03);
---surface-3:rgba(255,255,255,.05);
---line:rgba(255,255,255,.08);
---line-2:rgba(255,255,255,.14);
---text:#fff;
---muted:rgba(255,255,255,.72);
---soft:rgba(255,255,255,.45);
---faint:rgba(255,255,255,.22);
---green:#00ff9d;
---pink:#ff4d7d;
---cyan:#7fe7ff;
---gold1:#ffe600;
---gold2:#ffb100;
---shadow:0 12px 40px rgba(0,0,0,.35);
---radius-lg:24px;
---radius-md:18px;
---radius-sm:14px;
+  --bg:#05060a;
+  --bg2:#090d15;
+  --ink:#fffaf0;
+  --muted:rgba(255,250,240,.72);
+  --soft:rgba(255,250,240,.48);
+  --faint:rgba(255,250,240,.24);
+  --line:rgba(255,255,255,.11);
+  --line2:rgba(255,212,116,.36);
+  --glass:rgba(12,16,27,.68);
+  --glass2:rgba(255,255,255,.07);
+  --gold:#ffd474;
+  --gold2:#f5a623;
+  --green:#44f0a2;
+  --red:#ff6b7a;
+  --blue:#8fbfff;
+  --shadow:0 24px 80px rgba(0,0,0,.5);
+  --radius:30px;
 }
-
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{
-background:var(--dark);
-color:var(--text);
-font-family:'Space Grotesk',sans-serif;
-overflow-x:hidden;
-min-height:100vh;
-padding-bottom:120px;
-font-size:15px;
-line-height:1.65;
+  min-height:100svh;
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  line-height:1.55;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(255,212,116,.18),transparent 26rem),
+    radial-gradient(circle at 96% 8%,rgba(143,191,255,.12),transparent 24rem),
+    radial-gradient(circle at 48% 100%,rgba(68,240,162,.07),transparent 28rem),
+    linear-gradient(180deg,#05060a 0%,#080c14 52%,#05060a 100%);
+  overflow-x:hidden;
 }
-
-canvas#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-
-.page{
-position:relative;
-z-index:1;
-width:min(100%,720px);
-margin:0 auto;
-padding:0 clamp(16px,4vw,28px) 48px;
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:78px 78px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.7),transparent 76%);
 }
-
-.wa-hd{display:flex;align-items:center;gap:14px;padding:24px 0 0}
-.wa-ic{
-width:52px;height:52px;border-radius:16px;
-background:rgba(255,255,255,.08);
-border:1px solid rgba(255,255,255,.14);
-display:flex;align-items:center;justify-content:center;
-box-shadow:0 0 24px rgba(255,255,255,.05), inset 0 0 18px rgba(255,255,255,.03);
-flex-shrink:0;
+body:after{
+  content:"";
+  position:fixed;
+  width:42rem;
+  height:42rem;
+  left:50%;
+  top:-26rem;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,212,116,.12),transparent 66%);
+  filter:blur(8px);
+  pointer-events:none;
 }
-.wa-ic svg{width:24px;height:24px}
-.wa-br{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;letter-spacing:.5px}
-.wa-sb{font-size:10px;color:var(--soft);margin-top:2px;font-family:'JetBrains Mono',monospace;letter-spacing:.7px}
-
-.st-pill{
-display:inline-flex;align-items:center;gap:8px;
-background:rgba(255,255,255,.04);
-border:1px solid var(--line);
-border-radius:999px;
-padding:7px 16px;
-font-size:10px;
-font-weight:700;
-letter-spacing:2px;
-margin:16px 0 0;
-font-family:'JetBrains Mono',monospace;
-backdrop-filter:blur(10px);
+button,a{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer}
+a{text-decoration:none}
+.wrap{width:min(100% - 28px,1120px);margin:0 auto;padding:16px 0 124px;position:relative;z-index:1}
+.nav{height:64px;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{
+  width:52px;height:52px;border-radius:19px;display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(145deg,rgba(255,212,116,.2),rgba(255,255,255,.05));
+  border:1px solid rgba(255,212,116,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 14px 45px rgba(0,0,0,.38);
 }
-.st-dot{
-width:7px;height:7px;border-radius:50%;background:#fff;
-box-shadow:0 0 10px rgba(255,255,255,.8);
-animation:blink 1.6s ease-in-out infinite;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
-
-.hero{text-align:center;padding:30px 0 0}
-.hero-title{
-font-family:'Syne',sans-serif;
-font-size:clamp(44px,11vw,76px);
-font-weight:800;
-line-height:.92;
-letter-spacing:-1.6px;
-background:linear-gradient(135deg,#ffffff 0%,#f3f3f3 18%,#d7d7d7 34%,#ffffff 52%,#dcdcdc 70%,#ffffff 100%);
-background-size:320% 320%;
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-background-clip:text;
-animation:shimmer 7s ease-in-out infinite;
-filter:drop-shadow(0 0 24px rgba(255,255,255,.14));
-}
-.hero::before{
-content:'';
-position:absolute;
-left:50%;
-top:6px;
-transform:translateX(-50%);
-width:min(72vw,420px);
-height:120px;
-background:radial-gradient(circle, rgba(255,255,255,.08) 0%, rgba(255,255,255,.03) 42%, transparent 72%);
-filter:blur(26px);
-pointer-events:none;
-z-index:-1;
-}
-.hero{position:relative;text-align:center;padding:30px 0 0}
-@keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.hero-sub{font-size:13px;font-weight:700;letter-spacing:4px;color:var(--soft);margin-top:12px;text-transform:uppercase}
-.hero-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:3px;margin-top:8px}
-
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:34px 0 0}
-.sbox{
-background:rgba(255,255,255,.025);
-border:1px solid rgba(255,255,255,.06);
-border-radius:20px;
-padding:22px 12px 18px;
-text-align:center;
-position:relative;
-overflow:hidden;
-transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
-min-height:110px;
-}
-.sbox::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.04),transparent 70%);opacity:0;transition:opacity .25s ease}
-.sbox:hover::before{opacity:1}
-.sbox:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.12);box-shadow:0 8px 28px rgba(255,255,255,.04)}
-.sn{
-font-family:'JetBrains Mono',monospace;
-font-size:clamp(22px,5vw,30px);
-font-weight:700;
-line-height:1;
-letter-spacing:-.4px;
-font-variant-numeric:tabular-nums;
-font-feature-settings:'tnum' 1;
-min-height:32px;
-white-space:nowrap;
-}
-.sn.flash-up{animation:fU .28s ease}.sn.flash-down{animation:fD .28s ease}
-@keyframes fU{0%{opacity:.45;transform:translateY(4px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes fD{0%{opacity:.45;transform:translateY(-4px)}100%{opacity:1;transform:translateY(0)}}
-.sl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--soft);margin-top:10px;letter-spacing:2px;font-weight:600;min-height:16px}
-.s-change{font-size:8px;margin-top:3px;font-family:'JetBrains Mono',monospace;letter-spacing:.4px;height:13px;line-height:13px;font-variant-numeric:tabular-nums}
-.s-change.up{color:var(--green)}
-.s-change.down{color:var(--pink)}
-
-.dv{height:1px;margin:38px 0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);position:relative}
-.dv::after{content:'';position:absolute;left:50%;top:-2px;width:5px;height:5px;background:rgba(255,255,255,.18);border-radius:50%;transform:translateX(-50%)}
-.stl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--soft);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}
-
-.log-s,.cbox,.pc,.fc{
-backdrop-filter:blur(16px);
-box-shadow:var(--shadow);
-}
-
-.log-s{background:rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.05);border-radius:20px;overflow:hidden;position:relative}
-.log-s::before{content:'';position:absolute;inset:-1px;border-radius:20px;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 40%,transparent 60%,rgba(255,255,255,.03));pointer-events:none;z-index:1}
-.log-b{display:flex;align-items:center;gap:6px;padding:11px 14px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.05);position:relative;z-index:2}
-.ld{width:8px;height:8px;border-radius:50%}.ld.r{background:#ff5f57}.ld.y{background:#febc2e}.ld.g{background:#28c840}
-.log-b span{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--faint);letter-spacing:1px}
-.log-bd{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:10px;line-height:2.05;min-height:108px;max-height:150px;overflow:hidden;position:relative;z-index:2}
-.log-bd::after{content:'';position:absolute;bottom:0;left:0;right:0;height:30px;background:linear-gradient(transparent,rgba(0,0,0,.95));pointer-events:none}
-.ln{opacity:0;animation:lf .2s ease forwards;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@keyframes lf{to{opacity:1}}
-.ln .p{color:var(--green)} .ln .c{color:var(--cyan)} .ln .w{color:#c39cff} .ln .d{color:var(--soft)} .ln .o{color:#fff} .ln .er{color:#ff7b7b}
-.curb{display:inline-block;width:6px;height:12px;background:#fff;vertical-align:middle;margin-left:2px;animation:cb 1s step-end infinite}
-@keyframes cb{0%,100%{opacity:1}50%{opacity:0}}
-
-.cbox{background:linear-gradient(180deg,rgba(15,22,38,.96),rgba(10,16,28,.94));border:1px solid rgba(255,255,255,.06);border-radius:22px;overflow:hidden;position:relative}
-.cbox::after{
-content:'';
-position:absolute;
-inset:0;
-background:radial-gradient(circle at top right, rgba(255,255,255,.05), transparent 38%);
-pointer-events:none;
-z-index:1;
-}
-.cbox::before{content:'';position:absolute;inset:-1px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 30%);pointer-events:none;z-index:1}
-.ctop{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.05);position:relative;z-index:2}
-.cav{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.cnm{font-size:14px;font-weight:700}
-.cst{font-size:10px;color:var(--soft);font-family:'JetBrains Mono',monospace;letter-spacing:.2px;margin-top:1px}
-.cmsgs{padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:160px;max-height:240px;overflow:hidden;position:relative;z-index:2}
-.cmsgs::after{content:'';position:absolute;bottom:0;left:0;right:0;height:28px;background:linear-gradient(transparent,var(--surface));pointer-events:none}
-.cm{max-width:min(85%,360px);padding:10px 14px;border-radius:16px;font-size:12px;line-height:1.7;color:#fff;animation:ci .28s ease forwards;opacity:0;transform:translateY(6px) scale(.98);word-wrap:break-word}
-@keyframes ci{to{opacity:1;transform:translateY(0) scale(1)}}
-.cm.bt{background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.12);align-self:flex-start;border-bottom-left-radius:4px;box-shadow:0 8px 18px rgba(255,255,255,.03)}
-.cm.ur{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.08);align-self:flex-end;border-bottom-right-radius:4px}
-.cm.ur{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);align-self:flex-end;border-bottom-right-radius:4px}
-.cm .ct{font-size:8px;color:var(--faint);text-align:right;margin-top:4px;font-family:'JetBrains Mono',monospace}
-.cm .ck{color:rgba(255,255,255,.38);margin-left:3px}
-.typ{display:flex;gap:5px;align-self:flex-start;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;border-bottom-left-radius:4px;animation:ci .2s ease forwards;opacity:0}
-.typ span{width:5px;height:5px;background:rgba(255,255,255,.65);border-radius:50%;animation:tb 1.4s ease-in-out infinite}
-.typ span:nth-child(2){animation-delay:.2s}.typ span:nth-child(3){animation-delay:.4s}
-@keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.2}30%{transform:translateY(-4px);opacity:1}}
-
-.plist{display:flex;flex-direction:column;gap:14px}
-.pc{
-background:rgba(255,255,255,.025);
-border:1px solid rgba(255,255,255,.07);
-border-radius:24px;
-padding:20px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:14px;
-cursor:pointer;
-position:relative;
-overflow:hidden;
-transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease;
-}
-.pc:active{transform:scale(.985)}
-.pc>*{position:relative;z-index:1}
-.pc .sh{position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.035),transparent);transition:left .55s ease;z-index:0}
-.pc:hover .sh{left:100%}
-.pc:hover{border-color:rgba(255,255,255,.16);box-shadow:0 10px 32px rgba(255,255,255,.04);transform:translateY(-2px)}
-.pc::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(255,255,255,.025),transparent 60%);pointer-events:none}
-.pc.featured{
-background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.03));
-border-color:rgba(255,230,0,.22);
-box-shadow:0 14px 40px rgba(255,185,0,.08), inset 0 1px 0 rgba(255,255,255,.05);
-}
-.pc.featured::after{
-content:'';
-position:absolute;
-inset:0;
-background:linear-gradient(120deg,transparent 0%,rgba(255,236,150,.08) 36%,transparent 60%);
-pointer-events:none;
-}
-.hot{
-position:absolute;
-top:0;
-right:18px;
-z-index:2;
-background:linear-gradient(90deg,var(--gold1),var(--gold2));
-color:#000;
-font-size:7px;
-font-weight:800;
-padding:5px 12px;
-border-radius:0 0 10px 10px;
-letter-spacing:1.8px;
-text-transform:uppercase;
-font-family:'JetBrains Mono',monospace;
-line-height:1;
-box-shadow:0 8px 18px rgba(255,177,0,.18);
-transform:translateZ(0);
-white-space:nowrap;
-}
-.pl{display:flex;align-items:center;gap:14px;min-width:0;flex:1}
-.pi{width:50px;height:50px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);transition:transform .25s ease}
-.pc:hover .pi{transform:scale(1.06)}
-.pn{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;line-height:1.15;color:#fff}
-.pd{font-size:11px;color:var(--muted);margin-top:3px}
-.pf{font-size:9px;color:var(--soft);margin-top:2px;font-family:'JetBrains Mono',monospace;letter-spacing:.3px}
-.pr{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0}
-.ppv{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;line-height:1;color:#fff;text-shadow:0 0 15px rgba(255,255,255,.08);font-variant-numeric:tabular-nums;white-space:nowrap}
-.pper{font-size:9px;color:var(--soft);margin-top:4px;letter-spacing:.5px;font-family:'JetBrains Mono',monospace;white-space:nowrap}
-.par{width:30px;height:30px;border-radius:50%;margin-top:7px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--soft);transition:all .22s ease}
-.pc:hover .par{background:rgba(255,255,255,.1);color:#fff;transform:translateX(2px)}
-
-.fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.fc{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:16px;position:relative;overflow:hidden;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;min-height:122px}
-.fc:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.1);box-shadow:0 8px 24px rgba(255,255,255,.03)}
-.fc::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.025),transparent 70%);opacity:0;transition:opacity .25s ease}
-.fc:hover::before{opacity:1}
-.fc::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent)}
-.fci{font-size:20px;margin-bottom:8px;display:block}
-.fcn{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px}
-.fcd{font-size:10.5px;color:var(--muted);line-height:1.7}
-.fc.w{grid-column:1/-1}
-
-.tc{position:fixed;top:10px;left:10px;right:10px;z-index:999;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-width:420px;margin:0 auto}
-.toast{background:rgba(10,16,30,.97);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:10px;animation:tin .35s ease forwards;pointer-events:auto;box-shadow:0 10px 32px rgba(0,0,0,.55);backdrop-filter:blur(20px)}
-.toast.out{animation:tout .25s ease forwards}
-@keyframes tin{from{opacity:0;transform:translateY(-12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes tout{to{opacity:0;transform:translateY(-12px) scale(.97)}}
-.ti{width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
-.ttx{flex:1;min-width:0}.ttl{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tds{font-size:9.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ttm{font-size:8px;color:var(--faint);font-family:'JetBrains Mono',monospace;flex-shrink:0}
-
-.osc{margin:38px 0 0;text-align:center}
-.bo{
-display:inline-flex;align-items:center;gap:12px;
-background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.09));
-color:#fff;border:1px solid rgba(255,255,255,.22);
-cursor:pointer;padding:18px 28px;border-radius:999px;
-font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
-transition:transform .22s ease,border-color .22s ease,background .22s ease,box-shadow .22s ease;
-box-shadow:0 10px 34px rgba(255,255,255,.06), inset 0 1px 0 rgba(255,255,255,.08);
-width:min(100%,420px);justify-content:center;position:relative;overflow:hidden;backdrop-filter:blur(12px);
-min-height:58px;
-}
-.bo::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 60%);opacity:0;transition:opacity .25s ease}
-.bo:hover::before{opacity:1}
-.bo:hover{box-shadow:0 10px 36px rgba(255,255,255,.09);transform:translateY(-2px);border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.14)}
-.bo:active{transform:scale(.985)}
-.bo svg{width:20px;height:20px;flex-shrink:0}.bo svg path{fill:#fff}
-.ont{font-size:10px;color:var(--soft);margin-top:12px;letter-spacing:.4px;font-family:'JetBrains Mono',monospace}
-
-.robo-wrap{
-position:fixed;
-bottom:max(18px, env(safe-area-inset-bottom));
-right:max(18px, env(safe-area-inset-right));
-z-index:100;
-width:64px;
-height:64px;
-animation:rbFloat 4.5s ease-in-out infinite;
-will-change:transform;
-}
-@keyframes rbFloat{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-5px,0)}}
-.robo-corner{
-width:100%;height:100%;cursor:pointer;
-filter:drop-shadow(0 0 14px rgba(255,255,255,.08));
-transition:transform .18s ease, filter .18s ease;
-transform:translateZ(0);
-}
-.robo-corner:hover{filter:drop-shadow(0 0 20px rgba(255,255,255,.14)) brightness(1.08)}
-.robo-corner:active{transform:scale(.95)}
-.robo-corner svg{width:100%;height:100%;display:block}
-.robo-bubble{
-position:fixed;
-bottom:92px;
-right:max(18px, env(safe-area-inset-right));
-z-index:99;
-background:rgba(10,16,30,.97);
-border:1px solid rgba(255,255,255,.12);
-border-radius:14px 14px 4px 14px;
-padding:10px 14px;
-font-size:11px;
-color:var(--muted);
-line-height:1.55;
-max-width:220px;
-pointer-events:none;
-opacity:0;
-transform:translateY(8px) scale(.97);
-transition:opacity .28s ease, transform .28s ease;
-backdrop-filter:blur(16px);
-box-shadow:0 8px 24px rgba(0,0,0,.48);
-}
-.robo-bubble.show{opacity:1;transform:translateY(0) scale(1)}
-
-.snd{position:fixed;bottom:max(18px, env(safe-area-inset-bottom));left:max(18px, env(safe-area-inset-left));z-index:100;width:42px;height:42px;border-radius:50%;background:rgba(10,16,30,.9);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s ease;font-size:16px;color:#fff}
-.snd:hover{border-color:rgba(255,255,255,.16);box-shadow:0 0 16px rgba(255,255,255,.04)}
-.snd.off{color:var(--faint)}
-
-.ftr{text-align:center;padding:30px 0 0;border-top:1px solid rgba(255,255,255,.04);margin-top:34px}
-.ftb{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;letter-spacing:4px;text-shadow:0 0 10px rgba(255,255,255,.08)}
-.ftn{font-size:8px;color:var(--faint);margin-top:5px;letter-spacing:1px;font-family:'JetBrains Mono',monospace}
-
-.glow-line{position:fixed;top:0;left:0;right:0;height:1px;z-index:998;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:scanLine 9s linear infinite}
-@keyframes scanLine{0%{transform:translateY(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(100vh);opacity:0}}
-
-@media (min-width: 640px){
-.hero-sub{font-size:14px;letter-spacing:5px}
-.log-bd,.cmsgs{max-height:none}
-}
-
-@media (max-width: 560px){
-.page{padding:0 14px 44px}
-.stats{gap:10px}
-.sbox{padding:18px 8px 15px;min-height:102px}
-.pc{padding:18px;gap:10px}
-.ppv{font-size:22px}
-.hot{right:14px}
-}
-
-@media (max-width: 430px){
-.hero-title{font-size:clamp(40px,13vw,58px)}
-.hero-sub{letter-spacing:3px}
-.fg{grid-template-columns:1fr}
-.fc.w{grid-column:auto}
-.cm{max-width:88%}
-}
-
-@media (max-width: 360px){
-.page{padding:0 12px 42px}
-.wa-hd{gap:12px}
-.wa-ic{width:48px;height:48px}
-.stats{gap:8px}
-.sbox{border-radius:18px;min-height:96px}
-.sn{font-size:20px}
-.sl{font-size:7px;letter-spacing:1.4px}
-.pc{flex-direction:column;align-items:flex-start}
-.pr{width:100%;align-items:flex-start;padding-left:64px}
-.par{display:none}
-.hot{font-size:6.5px;padding:4px 10px}
-.bo{font-size:12px;letter-spacing:.8px;padding:16px 18px}
-.robo-wrap{width:56px;height:56px;right:14px;bottom:14px}
-.robo-bubble{right:14px;bottom:76px;max-width:180px;font-size:10px}
-.snd{left:14px;bottom:14px}
-}
-
-@media (hover:none){
-.pc:hover,.fc:hover,.sbox:hover,.bo:hover{transform:none}
-.pc:hover .pi,.pc:hover .par{transform:none}
-}
-
-@media (prefers-reduced-motion: reduce){
-*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
-}
+.logo svg{width:27px;height:27px}.brand-title{display:block;font-weight:950;letter-spacing:.3px}.brand-sub{display:block;font-size:11px;color:var(--soft);letter-spacing:1.2px;text-transform:uppercase;margin-top:1px}
+.nav-right{display:flex;align-items:center;gap:10px}.nav-link{font-size:12px;font-weight:850;color:var(--muted);padding:9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border-radius:999px;background:rgba(68,240,162,.08);border:1px solid rgba(68,240,162,.22);color:var(--green);font-size:11px;font-weight:950;letter-spacing:.9px;white-space:nowrap}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 18px var(--green);animation:pulse 1.8s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.82)}}
+.hero{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(340px,.96fr);gap:22px;align-items:center;padding:16px 0 18px}.hero-copy{min-width:0}.kicker{display:inline-flex;align-items:center;gap:8px;color:var(--gold);background:rgba(255,212,116,.09);border:1px solid rgba(255,212,116,.22);border-radius:999px;padding:8px 14px;font-size:11px;font-weight:950;letter-spacing:1.7px;text-transform:uppercase}.kicker:before{content:"✦"}
+h1{margin-top:18px;font-size:clamp(48px,8.6vw,96px);line-height:.88;letter-spacing:-3.2px;font-weight:1000}.grad{background:linear-gradient(115deg,#fff 0%,#fff1c6 16%,#ffd474 34%,#f5a623 52%,#fff 74%,#9cc6ff 100%);background-size:250% 250%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 8s ease infinite;filter:drop-shadow(0 16px 34px rgba(255,212,116,.14))}@keyframes shine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p{width:min(100%,620px);margin-top:17px;color:var(--muted);font-size:16px}.hero strong{color:#fff;font-weight:950}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.btn{min-height:54px;padding:0 22px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:950;letter-spacing:.25px;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}.btn-primary{color:#151007;background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 16px 48px rgba(245,166,35,.23),inset 0 1px 0 rgba(255,255,255,.38)}.btn-ghost{background:rgba(255,255,255,.055);border:1px solid var(--line);color:var(--ink)}.btn:active{transform:scale(.98)}
+.trust-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.trust{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;color:var(--muted);font-size:11px;font-weight:850;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.085)}
+.hero-card{position:relative;border-radius:34px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.12);box-shadow:var(--shadow);overflow:hidden}.hero-card:before{content:"";position:absolute;inset:-1px;background:linear-gradient(120deg,transparent,rgba(255,212,116,.16),transparent);transform:translateX(-120%);animation:sweep 5.6s ease-in-out infinite}@keyframes sweep{0%,25%{transform:translateX(-120%)}55%,100%{transform:translateX(120%)}}
+.control{position:relative;border-radius:26px;overflow:hidden;background:rgba(4,7,13,.78);border:1px solid rgba(255,255,255,.1)}.control-top{height:44px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.045)}.lamp{width:8px;height:8px;border-radius:50%;background:var(--soft)}.lamp:nth-child(1){background:#ff5f57}.lamp:nth-child(2){background:#f6bd2b}.lamp:nth-child(3){background:#31d158}.control-title{margin-left:auto;color:var(--soft);font-size:10px;font-weight:850;letter-spacing:1.1px}.control-body{padding:15px;display:grid;gap:13px}.status-card{padding:16px;border-radius:23px;background:linear-gradient(145deg,rgba(255,212,116,.13),rgba(255,255,255,.045));border:1px solid rgba(255,212,116,.22)}.status-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.status-head b{font-size:15px}.live-tag{font-size:10px;font-weight:950;color:var(--green);background:rgba(68,240,162,.09);border:1px solid rgba(68,240,162,.22);border-radius:999px;padding:6px 9px}.big-metric{margin-top:12px;font-size:42px;line-height:1;font-weight:1000;font-variant-numeric:tabular-nums}.metric-sub{color:var(--muted);font-size:12px;margin-top:5px}.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.mini-box{padding:12px 10px;border-radius:18px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);min-width:0}.mini-box b{display:block;font-size:18px;font-weight:1000;font-variant-numeric:tabular-nums}.mini-box span{display:block;margin-top:3px;color:var(--soft);font-size:10px;font-weight:850;letter-spacing:.7px;text-transform:uppercase}.feed{display:grid;gap:8px}.feed-row{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:16px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted);animation:rise .25s ease both}.feed-row i{font-style:normal}.feed-row b{color:var(--ink);font-weight:850}.ok{color:var(--green)}.warn{color:var(--gold)}.danger{color:var(--red)}@keyframes rise{to{opacity:1;transform:translateY(0)}}
+.quick-proof{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px 0}.stat{padding:18px 12px;text-align:center;min-height:106px;background:linear-gradient(180deg,rgba(255,255,255,.074),rgba(255,255,255,.034));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(16px)}.num{font-size:clamp(22px,4vw,33px);font-weight:1000;line-height:1;font-variant-numeric:tabular-nums}.label{margin-top:9px;color:var(--soft);font-size:10px;font-weight:900;letter-spacing:1.25px;text-transform:uppercase}.delta{height:16px;margin-top:4px;font-size:10px;font-weight:950;color:var(--green);font-variant-numeric:tabular-nums}
+.section{margin-top:38px}.section-title{display:flex;align-items:center;gap:12px;margin-bottom:15px;color:var(--soft);font-size:11px;font-weight:950;letter-spacing:2px;text-transform:uppercase}.section-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,rgba(255,255,255,.14),transparent)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pain,.gain,.feature,.proof,.step,.compare-card,.plan{background:linear-gradient(180deg,rgba(255,255,255,.074),rgba(255,255,255,.034));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(16px)}.pain,.gain{padding:20px}.pain h3,.gain h3{font-size:18px;margin-bottom:12px}.list{display:grid;gap:10px}.list div{display:flex;gap:10px;color:var(--muted);font-size:13px}.list b{font-size:15px}.gain{border-color:rgba(255,212,116,.23);background:linear-gradient(180deg,rgba(255,212,116,.12),rgba(255,255,255,.035))}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.plan{position:relative;text-align:left;padding:19px;overflow:hidden;transition:transform .18s ease,border-color .18s ease}.plan:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.045),transparent);transform:translateX(-110%);transition:.45s ease}.plan.featured{border-color:var(--line2);background:linear-gradient(180deg,rgba(255,212,116,.14),rgba(255,255,255,.04));transform:translateY(-7px)}.badge{position:absolute;top:0;right:18px;color:#151007;background:linear-gradient(135deg,var(--gold),var(--gold2));padding:6px 12px;border-radius:0 0 12px 12px;font-size:10px;font-weight:1000;letter-spacing:1px}.icon{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);font-size:23px}.plan h3{margin-top:14px;font-size:20px;line-height:1.1;font-weight:1000}.plan p{color:var(--muted);font-size:13px;margin-top:5px}.price{margin-top:18px}.price b{display:block;font-size:34px;line-height:1;font-weight:1000}.price span{color:var(--soft);font-size:12px}.plan ul{list-style:none;display:grid;gap:8px;margin:18px 0 0}.plan li{color:var(--muted);font-size:12px;display:flex;gap:8px}.plan li:before{content:"✓";color:var(--green);font-weight:1000}.plan .btn{width:100%;margin-top:18px;min-height:48px;font-size:13px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.feature{padding:18px;min-height:145px;box-shadow:none}.feature i{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:15px;background:rgba(255,212,116,.085);border:1px solid rgba(255,212,116,.18);font-style:normal;margin-bottom:10px}.feature h3{font-size:15px;margin-bottom:5px}.feature p{font-size:12.5px;color:var(--muted)}
+.compare-card{padding:20px;box-shadow:none}.compare-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07)}.compare-row:last-child{border-bottom:0}.compare-row span{color:var(--muted);font-size:13px}.check{color:var(--green);font-weight:1000}.x{color:var(--red);font-weight:1000}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.proof{padding:19px;box-shadow:none}.stars{color:var(--gold);font-size:13px;letter-spacing:1px}.quote{margin-top:10px;font-size:14px;color:var(--ink);font-weight:850}.who{display:flex;align-items:center;gap:10px;margin-top:15px;color:var(--muted);font-size:12px}.who span{width:34px;height:34px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.step{padding:18px;box-shadow:none}.step b{display:grid;place-items:center;width:36px;height:36px;border-radius:14px;background:rgba(255,212,116,.12);border:1px solid rgba(255,212,116,.22);color:var(--gold);margin-bottom:10px}.step h3{font-size:15px;margin-bottom:4px}.step p{font-size:12.5px;color:var(--muted)}
+.cta{margin-top:38px;padding:28px;border-radius:34px;text-align:center;background:linear-gradient(135deg,rgba(255,212,116,.17),rgba(255,255,255,.045));border:1px solid rgba(255,212,116,.26);box-shadow:var(--shadow);position:relative;overflow:hidden}.cta:before{content:"";position:absolute;inset:auto 12% 0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}.cta h2{font-size:clamp(25px,4vw,40px);font-weight:1000;line-height:1.08;letter-spacing:-.8px}.cta p{width:min(100%,560px);margin:10px auto 20px;color:var(--muted);font-size:14px}.footer{text-align:center;margin-top:28px;color:var(--soft);font-size:11px;letter-spacing:1px}
+.robot{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(88px,env(safe-area-inset-bottom));z-index:10;width:60px;height:60px;border-radius:22px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(255,212,116,.2),rgba(255,255,255,.06));border:1px solid rgba(255,212,116,.25);box-shadow:0 18px 50px rgba(0,0,0,.42);animation:float 4s ease-in-out infinite}.robot svg{width:41px;height:41px}.bubble{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(154px,calc(env(safe-area-inset-bottom) + 154px));z-index:9;max-width:236px;padding:11px 13px;border-radius:16px 16px 4px 16px;background:rgba(10,14,24,.96);border:1px solid rgba(255,255,255,.12);color:var(--muted);font-size:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:.22s ease;pointer-events:none}.bubble.show{opacity:1;transform:translateY(0)}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.toast-wrap{position:fixed;top:max(12px,env(safe-area-inset-top));left:12px;right:12px;z-index:20;display:grid;gap:8px;pointer-events:none}.toast{width:min(100%,420px);margin:0 auto;display:flex;gap:10px;align-items:center;background:rgba(10,14,24,.96);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow);animation:toastIn .25s ease both}.toast.out{animation:toastOut .2s ease both}.toast-ic{font-size:19px}.toast strong{display:block;font-size:12px}.toast span{display:block;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}@keyframes toastIn{from{opacity:0;transform:translateY(-10px) scale(.98)}to{opacity:1;transform:none}}@keyframes toastOut{to{opacity:0;transform:translateY(-10px) scale(.98)}}
+.sticky-order{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:11;width:min(100% - 24px,780px);margin:0 auto;padding:10px;border-radius:24px;background:rgba(9,12,20,.84);border:1px solid rgba(255,255,255,.12);box-shadow:0 16px 50px rgba(0,0,0,.45);backdrop-filter:blur(16px);display:flex;align-items:center;gap:10px}.sticky-copy{flex:1;min-width:0}.sticky-copy b{display:block;font-size:13px}.sticky-copy span{display:block;color:var(--soft);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sticky-order .btn{min-height:46px;padding:0 16px;font-size:13px}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}.reveal.show{opacity:1;transform:translateY(0)}
+@media (hover:hover){.btn:hover,.plan:hover{transform:translateY(-2px)}.btn-ghost:hover,.plan:hover{border-color:rgba(255,212,116,.3)}.plan:hover:before{transform:translateX(110%)}}
+@media (max-width:900px){.hero{grid-template-columns:1fr}.hero-copy{text-align:center}.hero p{margin-left:auto;margin-right:auto}.hero-actions,.trust-row{justify-content:center}.plans,.features,.proof-grid{grid-template-columns:1fr 1fr}.quick-proof{grid-template-columns:repeat(2,1fr)}.plan.featured{transform:none}.split{grid-template-columns:1fr}.steps{grid-template-columns:1fr}}
+@media (max-width:560px){.wrap{width:min(100% - 24px,1120px);padding-top:12px}.nav{align-items:flex-start;height:auto}.nav-link{display:none}.pill{font-size:10px;padding:8px 10px}.hero{text-align:center;padding-top:8px}.hero-actions{display:grid}.btn{width:100%}h1{font-size:clamp(43px,13vw,62px);letter-spacing:-2.2px}.hero p{font-size:14.5px}.hero-card{padding:10px;border-radius:27px}.control{border-radius:22px}.control-body{padding:12px}.mini-grid{grid-template-columns:1fr}.quick-proof{grid-template-columns:1fr 1fr;gap:9px}.stat{padding:15px 8px;min-height:96px}.label{font-size:9px;letter-spacing:.9px}.plans,.features,.proof-grid{grid-template-columns:1fr}.plan{padding:17px}.robot,.bubble{display:none}.sticky-order{border-radius:20px}.sticky-copy b{font-size:12px}.sticky-order .btn{font-size:12px;padding:0 13px}.screen-title,.control-title{display:none}}
+@media (max-width:370px){.wrap{width:min(100% - 20px,1120px)}.logo{width:46px;height:46px}.brand-title{font-size:14px}.brand-sub{font-size:10px}.quick-proof{grid-template-columns:1fr}.num{font-size:28px}.sticky-copy span{display:none}.big-metric{font-size:36px}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
 <body>
-<div class="glow-line"></div>
-<canvas id="bg"></canvas>
-<div class="tc" id="toasts"></div>
-
-<div class="robo-wrap" aria-hidden="false">
-  <div class="robo-corner" id="roboCorner" onclick="roboTap()" aria-label="Robot assistant" role="button" tabindex="0">
-    <svg viewBox="0 0 100 100" fill="none">
-      <circle cx="50" cy="50" r="48" fill="rgba(8,14,28,.97)" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
-      <rect x="22" y="32" width="56" height="38" rx="12" fill="#0c1628" stroke="rgba(255,255,255,.2)" stroke-width=".8"/>
-      <rect x="28" y="37" width="44" height="26" rx="8" fill="#060e1c"/>
-      <circle cx="40" cy="50" r="7" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.3)" stroke-width=".7"/>
-      <circle cx="40" cy="50" r="4.5" fill="rgba(255,255,255,.75)"/>
-      <circle cx="42" cy="48" r="1.8" fill="#060e1c"/>
-      <circle cx="38" cy="52" r=".7" fill="rgba(255,255,255,.3)"/>
-      <circle cx="60" cy="50" r="7" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.3)" stroke-width=".7"/>
-      <circle cx="60" cy="50" r="4.5" fill="rgba(255,255,255,.75)"/>
-      <circle cx="62" cy="48" r="1.8" fill="#060e1c"/>
-      <circle cx="58" cy="52" r=".7" fill="rgba(255,255,255,.3)"/>
-      <path d="M40 63 Q50 69 60 63" stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-linecap="round" fill="none"/>
-      <rect x="37" y="20" width="26" height="12" rx="6" fill="#0c1628" stroke="rgba(255,255,255,.15)" stroke-width=".7"/>
-      <circle cx="44" cy="26" r="2" fill="rgba(177,79,255,.5)"/>
-      <circle cx="50" cy="26" r="2" fill="rgba(0,255,255,.5)"/>
-      <circle cx="56" cy="26" r="2" fill="rgba(0,255,157,.5)"/>
-      <line x1="22" y1="45" x2="12" y2="49" stroke="#0c1628" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="11" cy="54" r="3.5" fill="#0c1628" stroke="rgba(255,255,255,.08)" stroke-width=".7"/>
-      <line x1="78" y1="45" x2="88" y2="49" stroke="#0c1628" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="89" cy="54" r="3.5" fill="#0c1628" stroke="rgba(255,255,255,.08)" stroke-width=".7"/>
-      <rect x="38" y="70" width="10" height="12" rx="5" fill="#0c1628" stroke="rgba(255,255,255,.08)" stroke-width=".7"/>
-      <rect x="52" y="70" width="10" height="12" rx="5" fill="#0c1628" stroke="rgba(255,255,255,.08)" stroke-width=".7"/>
-    </svg>
-  </div>
-</div>
-<div class="robo-bubble" id="roboBubble"></div>
-
-<div class="page">
-  <div class="wa-hd">
-    <div class="wa-ic">
-      <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="rgba(255,255,255,.1)"/><path d="M22.5 19.3c-.3-.1-1.8-.9-2.1-1-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.1.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6l.5-.6c.1-.2.2-.3.3-.5 0-.2 0-.4-.1-.5-.1-.1-.7-1.7-1-2.3-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3 2.9 1.2 2.9.8 3.4.8.5-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.3z" fill="#fff"/></svg>
+<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+<div class="wrap">
+  <nav class="nav" aria-label="Navigasi utama">
+    <a class="brand" href="#top" aria-label="XOBE Bot">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="15" fill="rgba(68,240,162,.14)" stroke="rgba(68,240,162,.35)"/><path d="M22.8 18.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.2-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.6s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.4.2-1.5 0 0-.2-.1-.5-.3z" fill="#44f0a2"/></svg>
+      </span>
+      <span><span class="brand-title">XOBE BOT</span><span class="brand-sub">WhatsApp Automation</span></span>
+    </a>
+    <div class="nav-right">
+      <a class="nav-link" href="#fitur">Fitur</a>
+      <a class="nav-link" href="#paket">Harga</a>
+      <span class="pill"><span class="dot"></span>Online 24/7</span>
     </div>
-    <div>
-      <div class="wa-br">WhatsApp Bot</div>
-      <div class="wa-sb">by XOBE SYSTEM</div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-copy reveal">
+      <span class="kicker">Premium Group Bot</span>
+      <h1><span class="grad">GRUP RAPI.</span><br>ADMIN AUTO PRO.</h1>
+      <p><strong>Sewa bot WhatsApp</strong> buat jaga grup, blokir spam, hapus status, proses downloader, dan bikin grup terlihat aktif tanpa admin harus standby terus.</p>
+      <div class="trust-row" aria-label="Keunggulan singkat">
+        <span class="trust">✓ Setup dibantu admin</span>
+        <span class="trust">✓ Ringan buat HP</span>
+        <span class="trust">✓ Harga mulai Rp 3K</span>
+      </div>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-order="Monthly">Ambil Monthly Rp 20K</button>
+        <a class="btn btn-ghost" href="#paket">Bandingkan Paket</a>
+      </div>
     </div>
-  </div>
 
-  <div class="st-pill"><span class="st-dot"></span>ACTIVE 24/7</div>
+    <div class="hero-card reveal" aria-label="Preview dashboard bot">
+      <div class="control">
+        <div class="control-top"><span class="lamp"></span><span class="lamp"></span><span class="lamp"></span><span class="control-title">xobe-control, realtime</span></div>
+        <div class="control-body">
+          <div class="status-card">
+            <div class="status-head"><b>Protection Status</b><span class="live-tag">LIVE</span></div>
+            <div class="big-metric" id="heroMetric">847</div>
+            <div class="metric-sub">grup sedang dipantau sistem</div>
+          </div>
+          <div class="mini-grid">
+            <div class="mini-box"><b id="botNum">312</b><span>Bot</span></div>
+            <div class="mini-box"><b id="msgNum">2.881</b><span>Msg/Jam</span></div>
+            <div class="mini-box"><b id="upNum">99%</b><span>Uptime</span></div>
+          </div>
+          <div class="feed" id="feed"></div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <div class="hero">
-    <div class="hero-title">SEWA BOT</div>
-    <div class="hero-sub">WhatsApp Group Bot</div>
-    <div class="hero-tag">✦ by XOBE ✦</div>
-  </div>
+  <section class="quick-proof reveal" aria-label="Statistik bot">
+    <article class="stat"><div class="num" id="orderNum">24</div><div class="label">Order Hari Ini</div><div class="delta" id="orderDelta">+3</div></article>
+    <article class="stat"><div class="num" id="spamNum">0</div><div class="label">Spam Diblokir</div><div class="delta">live</div></article>
+    <article class="stat"><div class="num">2m</div><div class="label">Rata Support</div><div class="delta">fast</div></article>
+    <article class="stat"><div class="num">Rp3K</div><div class="label">Mulai Dari</div><div class="delta">starter</div></article>
+  </section>
 
-  <div class="stats">
-    <div class="sbox"><div class="sn" id="n1">312</div><div class="sl">BOT AKTIF</div><div class="s-change" id="ch1"></div></div>
-    <div class="sbox"><div class="sn" id="n2">2.881</div><div class="sl">PESAN/JAM</div><div class="s-change" id="ch2"></div></div>
-    <div class="sbox"><div class="sn" id="n3">99%</div><div class="sl">UPTIME</div><div class="s-change" id="ch3"></div></div>
-  </div>
+  <section class="section reveal" aria-label="Masalah dan solusi">
+    <div class="section-title">Biar Grup Tidak Berantakan</div>
+    <div class="split">
+      <div class="pain">
+        <h3>Tanpa bot</h3>
+        <div class="list">
+          <div><b class="x">✕</b><span>Link promosi liar masuk terus.</span></div>
+          <div><b class="x">✕</b><span>Status grup numpuk dan bikin risih.</span></div>
+          <div><b class="x">✕</b><span>Admin capek pantau chat manual.</span></div>
+          <div><b class="x">✕</b><span>Grup terlihat kurang aktif.</span></div>
+        </div>
+      </div>
+      <div class="gain">
+        <h3>Pakai XOBE Bot</h3>
+        <div class="list">
+          <div><b class="check">✓</b><span>Anti link bantu jaga grup tetap aman.</span></div>
+          <div><b class="check">✓</b><span>Auto hapus status bikin grup lebih bersih.</span></div>
+          <div><b class="check">✓</b><span>Downloader dan game bikin grup lebih hidup.</span></div>
+          <div><b class="check">✓</b><span>Admin terlihat siap 24 jam.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <div class="dv"></div>
-  <div class="stl">System Log</div>
-  <div class="log-s">
-    <div class="log-b"><div class="ld r"></div><div class="ld y"></div><div class="ld g"></div><span>xobe-bot , live</span></div>
-    <div class="log-bd" id="logB"><div class="ln"><span class="p">xobe</span><span class="c">$</span> <span class="d">init...</span></div></div>
-  </div>
+  <section class="section reveal" id="paket" aria-label="Paket sewa bot">
+    <div class="section-title">Pilih Paket</div>
+    <div class="plans">
+      <article class="plan">
+        <div class="icon">⚡</div>
+        <h3>STARTER</h3>
+        <p>Tes bot dulu tanpa modal besar.</p>
+        <div class="price"><b>Rp 3K</b><span>/ 2 hari</span></div>
+        <ul><li>All features dasar</li><li>Cocok buat coba</li><li>Setup dibantu admin</li></ul>
+        <button class="btn btn-ghost" data-order="Starter">Order Starter</button>
+      </article>
+      <article class="plan featured">
+        <span class="badge">TERLARIS</span>
+        <div class="icon">👑</div>
+        <h3>MONTHLY</h3>
+        <p>Paling worth buat grup aktif.</p>
+        <div class="price"><b>Rp 20K</b><span>/ bulan</span></div>
+        <ul><li>All access</li><li>Prioritas support</li><li>Aman buat grup jualan</li></ul>
+        <button class="btn btn-primary" data-order="Monthly">Ambil Monthly</button>
+      </article>
+      <article class="plan">
+        <div class="icon">🚀</div>
+        <h3>WEEKLY</h3>
+        <p>Paket tengah buat grup santai.</p>
+        <div class="price"><b>Rp 5K</b><span>/ minggu</span></div>
+        <ul><li>Fitur premium</li><li>Masa aktif 7 hari</li><li>Support normal</li></ul>
+        <button class="btn btn-ghost" data-order="Weekly">Order Weekly</button>
+      </article>
+    </div>
+  </section>
 
-  <div class="dv"></div>
-  <div class="stl">Live Chat</div>
-  <div class="cbox">
-    <div class="ctop"><div class="cav">🤖</div><div><div class="cnm">XOBE Bot</div><div class="cst" id="cSt">online</div></div></div>
-    <div class="cmsgs" id="cMsgs"></div>
-  </div>
+  <section class="section reveal" id="fitur" aria-label="Fitur bot">
+    <div class="section-title">Fitur Yang Bikin Kepakai</div>
+    <div class="features">
+      <article class="feature"><i>🔗</i><h3>Anti Link</h3><p>Blokir link spam sesuai setting grup.</p></article>
+      <article class="feature"><i>🧹</i><h3>Auto Hapus Status</h3><p>Grup lebih bersih tanpa pantau manual.</p></article>
+      <article class="feature"><i>🛡️</i><h3>Bot Guard</h3><p>Proteksi flood dan chat mengganggu.</p></article>
+      <article class="feature"><i>🎵</i><h3>Downloader</h3><p>TikTok, IG, dan YouTube dari chat.</p></article>
+      <article class="feature"><i>🎮</i><h3>Mini Games</h3><p>Quiz, suit, tebak gambar, dan game santai.</p></article>
+      <article class="feature"><i>⚙️</i><h3>Custom Setting</h3><p>Atur mode sesuai kebutuhan grup.</p></article>
+    </div>
+  </section>
 
-  <div class="dv"></div>
-  <div class="stl">Pilih Paket</div>
-  <div class="plist">
-    <div class="pc" onclick="order('Starter')"><div class="sh"></div><div class="pl"><div class="pi">⚡</div><div><div class="pn">STARTER</div><div class="pd">Akses 2 Hari</div><div class="pf">all features</div></div></div><div class="pr"><div class="ppv">Rp 3K</div><div class="pper">/ 2 hari</div><div class="par">→</div></div></div>
-    <div class="pc" onclick="order('Weekly')"><div class="sh"></div><div class="pl"><div class="pi">🚀</div><div><div class="pn">WEEKLY</div><div class="pd">Akses 1 Minggu</div><div class="pf">+ premium</div></div></div><div class="pr"><div class="ppv">Rp 5K</div><div class="pper">/ minggu</div><div class="par">→</div></div></div>
-    <div class="pc featured" onclick="order('Monthly')"><div class="sh"></div><div class="hot">TERLARIS</div><div class="pl"><div class="pi">👑</div><div><div class="pn">MONTHLY</div><div class="pd">Akses 1 Bulan</div><div class="pf">all access + priority</div></div></div><div class="pr"><div class="ppv">Rp 20K</div><div class="pper">/ bulan</div><div class="par">→</div></div></div>
-  </div>
+  <section class="section reveal" aria-label="Alasan pilih XOBE Bot">
+    <div class="section-title">Kenapa Worth</div>
+    <div class="compare-card">
+      <div class="compare-row"><span>Tampilan promosi terlihat mahal</span><b class="check">✓</b></div>
+      <div class="compare-row"><span>Order langsung masuk WhatsApp admin</span><b class="check">✓</b></div>
+      <div class="compare-row"><span>UI aman di HP kecil dan desktop</span><b class="check">✓</b></div>
+      <div class="compare-row"><span>Tanpa canvas berat dan audio ribet</span><b class="check">✓</b></div>
+      <div class="compare-row"><span>Desain polos asal tempel</span><b class="x">✕</b></div>
+    </div>
+  </section>
 
-  <div class="dv"></div>
-  <div class="stl">Fitur</div>
-  <div class="fg">
-    <div class="fc"><span class="fci">⚡</span><div class="fcn">Fast Respond</div><div class="fcd">Balas pesan dalam hitungan detik.</div></div>
-    <div class="fc"><span class="fci">🔗</span><div class="fcn">Anti Link</div><div class="fcd">Blokir link spam otomatis.</div></div>
-    <div class="fc w"><span class="fci">🧹</span><div class="fcn">Auto Hapus Status Grup</div><div class="fcd">Status grup dibersihkan otomatis. Grup tetap rapi dan aman.</div></div>
-    <div class="fc"><span class="fci">🛡️</span><div class="fcn">Bot Guard</div><div class="fcd">Proteksi dari spam dan flood.</div></div>
-    <div class="fc"><span class="fci">🎮</span><div class="fcn">Mini Games</div><div class="fcd">Tebak gambar, suit, quiz, dan lainnya.</div></div>
-    <div class="fc w"><span class="fci">🎵</span><div class="fcn">Downloader & Custom</div><div class="fcd">Download video TikTok, IG, YT dari chat. Atur welcome message, anti badword, dan kick otomatis.</div></div>
-  </div>
+  <section class="section reveal" aria-label="Testimoni singkat">
+    <div class="section-title">Social Proof</div>
+    <div class="proof-grid">
+      <article class="proof"><div class="stars">★★★★★</div><p class="quote">“Grup jualan jadi lebih rapi. Link spam langsung kehandle.”</p><div class="who"><span>🛒</span><div>Owner grup jualan<br>paket Monthly</div></div></article>
+      <article class="proof"><div class="stars">★★★★★</div><p class="quote">“Setup cepat. Admin tinggal kasih link grup.”</p><div class="who"><span>👑</span><div>Admin komunitas<br>support prioritas</div></div></article>
+      <article class="proof"><div class="stars">★★★★★</div><p class="quote">“Harga kecil, fitur kepakai tiap hari.”</p><div class="who"><span>⚡</span><div>Pengguna starter<br>upgrade weekly</div></div></article>
+    </div>
+  </section>
 
-  <div class="osc">
-    <button class="bo" onclick="order('general')">
-      <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="rgba(255,255,255,.15)"/><path d="M22.5 19.3c-.3-.1-1.8-.9-2.1-1-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.1.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6l.5-.6c.1-.2.2-.3.3-.5 0-.2 0-.4-.1-.5-.1-.1-.7-1.7-1-2.3-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3 2.9 1.2 2.9.8 3.4.8.5-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.3z" fill="#fff"/></svg>
-      ORDER VIA WHATSAPP
-    </button>
-    <div class="ont">Tap lalu langsung terhubung ke admin.</div>
-  </div>
+  <section class="section reveal" aria-label="Cara order">
+    <div class="section-title">Cara Order</div>
+    <div class="steps">
+      <article class="step"><b>1</b><h3>Pilih paket</h3><p>Starter, Weekly, atau Monthly.</p></article>
+      <article class="step"><b>2</b><h3>Chat admin</h3><p>Tombol order langsung buka WhatsApp.</p></article>
+      <article class="step"><b>3</b><h3>Bot dipasang</h3><p>Admin bantu setup sampai siap dipakai.</p></article>
+    </div>
+  </section>
 
-  <div class="ftr"><div class="ftb">XOBE BOT</div><div class="ftn">© 2026 , all systems operational</div></div>
+  <section class="cta reveal">
+    <h2>Grup kamu bisa terlihat lebih niat hari ini.</h2>
+    <p>Monthly Rp 20K jadi pilihan paling aman buat grup aktif, komunitas, kelas, dan jualan.</p>
+    <button class="btn btn-primary" data-order="Monthly">Order Monthly Sekarang</button>
+  </section>
+
+  <footer class="footer">© 2026 XOBE BOT. Clean premium automation.</footer>
 </div>
 
-<div class="snd" id="sndBtn" onclick="toggleSnd()" role="button" aria-label="Toggle sound">🔊</div>
+<button class="robot" id="robot" aria-label="Bantuan cepat">
+  <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+    <rect x="12" y="19" width="40" height="31" rx="13" fill="rgba(255,255,255,.08)" stroke="rgba(255,212,116,.42)"/>
+    <rect x="18" y="25" width="28" height="19" rx="8" fill="rgba(0,0,0,.25)"/>
+    <circle cx="27" cy="34" r="4" fill="#ffd474"/><circle cx="37" cy="34" r="4" fill="#ffd474"/>
+    <path d="M26 42c4 3 8 3 12 0" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M32 19V11" stroke="rgba(255,212,116,.55)" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="9" r="3" fill="#ffd474"/>
+  </svg>
+</button>
+<div class="bubble" id="bubble">Monthly Rp 20K. Paling cocok buat grup aktif.</div>
+
+<div class="sticky-order">
+  <div class="sticky-copy"><b>Monthly Rp 20K</b><span>All access, prioritas support, setup cepat.</span></div>
+  <button class="btn btn-primary" data-order="Monthly">Order</button>
+</div>
 
 <script>
-var ac = null, sOn = true;
-function gAC(){ if(!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); return ac; }
-document.addEventListener('click', function(){ gAC(); }, { once:true });
-document.addEventListener('touchstart', function(){ gAC(); }, { once:true, passive:true });
+(function(){
+  var phone = "6283141707524";
+  var stats = { bot:312, msg:2881, up:99, group:847, order:24, spam:0 };
+  var fmt = new Intl.NumberFormat("id-ID");
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var botNum = document.getElementById("botNum");
+  var msgNum = document.getElementById("msgNum");
+  var upNum = document.getElementById("upNum");
+  var heroMetric = document.getElementById("heroMetric");
+  var orderNum = document.getElementById("orderNum");
+  var orderDelta = document.getElementById("orderDelta");
+  var spamNum = document.getElementById("spamNum");
+  var feed = document.getElementById("feed");
+  var toastWrap = document.getElementById("toastWrap");
+  var bubble = document.getElementById("bubble");
 
-function sfx(t){
-  if(!sOn) return;
-  try{
-    var c = gAC(), n = c.currentTime;
-    if(t === 'click'){
-      var o = c.createOscillator(), g = c.createGain();
-      o.connect(g); g.connect(c.destination); o.type='sine';
-      o.frequency.setValueAtTime(800,n); o.frequency.exponentialRampToValueAtTime(300,n+.07);
-      g.gain.setValueAtTime(.07,n); g.gain.exponentialRampToValueAtTime(.001,n+.09);
-      o.start(n); o.stop(n+.09);
-    }else if(t === 'notif'){
-      [0,.06,.12].forEach(function(d,i){
-        var o = c.createOscillator(), g = c.createGain();
-        o.connect(g); g.connect(c.destination); o.type='sine';
-        o.frequency.setValueAtTime([1000,1400,1200][i],n+d);
-        g.gain.setValueAtTime(.05,n+d); g.gain.exponentialRampToValueAtTime(.001,n+d+.1);
-        o.start(n+d); o.stop(n+d+.1);
-      });
-    }else if(t === 'toast'){
-      var o = c.createOscillator(), g = c.createGain();
-      o.connect(g); g.connect(c.destination); o.type='triangle';
-      o.frequency.setValueAtTime(500,n); o.frequency.exponentialRampToValueAtTime(800,n+.08);
-      g.gain.setValueAtTime(.04,n); g.gain.exponentialRampToValueAtTime(.001,n+.12);
-      o.start(n); o.stop(n+.12);
-    }else if(t === 'type'){
-      var b = c.createBuffer(1, c.sampleRate*.015, c.sampleRate), dd = b.getChannelData(0);
-      for(var i=0;i<dd.length;i++) dd[i] = (Math.random()*2-1)*.008;
-      var s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
-      s.buffer = b; f.type='highpass'; f.frequency.value = 2500; g.gain.value = .2;
-      s.connect(f); f.connect(g); g.connect(c.destination); s.start();
-    }else if(t === 'success'){
-      [0,.08,.16,.24].forEach(function(d,i){
-        var o = c.createOscillator(), g = c.createGain();
-        o.connect(g); g.connect(c.destination); o.type='sine';
-        o.frequency.setValueAtTime([523,659,784,1047][i],n+d);
-        g.gain.setValueAtTime(.06,n+d); g.gain.exponentialRampToValueAtTime(.001,n+d+.18);
-        o.start(n+d); o.stop(n+d+.18);
-      });
-    }else if(t === 'hover'){
-      var o = c.createOscillator(), g = c.createGain();
-      o.connect(g); g.connect(c.destination); o.type='sine'; o.frequency.setValueAtTime(1400,n);
-      g.gain.setValueAtTime(.012,n); g.gain.exponentialRampToValueAtTime(.001,n+.03);
-      o.start(n); o.stop(n+.03);
-    }else if(t === 'robo'){
-      var o = c.createOscillator(), g = c.createGain();
-      o.connect(g); g.connect(c.destination); o.type='sine';
-      o.frequency.setValueAtTime(600,n); o.frequency.setValueAtTime(750,n+.05); o.frequency.setValueAtTime(680,n+.1);
-      g.gain.setValueAtTime(.05,n); g.gain.exponentialRampToValueAtTime(.001,n+.15);
-      o.start(n); o.stop(n+.15);
-    }else if(t === 'pop'){
-      var o = c.createOscillator(), g = c.createGain();
-      o.connect(g); g.connect(c.destination); o.type='sine';
-      o.frequency.setValueAtTime(400,n); o.frequency.exponentialRampToValueAtTime(1000,n+.04);
-      g.gain.setValueAtTime(.06,n); g.gain.exponentialRampToValueAtTime(.001,n+.07);
-      o.start(n); o.stop(n+.07);
-    }else if(t === 'msg'){
-      var o = c.createOscillator(), g = c.createGain();
-      o.connect(g); g.connect(c.destination); o.type='sine';
-      o.frequency.setValueAtTime(900,n); o.frequency.exponentialRampToValueAtTime(550,n+.05);
-      g.gain.setValueAtTime(.03,n); g.gain.exponentialRampToValueAtTime(.001,n+.07);
-      o.start(n); o.stop(n+.07);
-    }else if(t === 'tick'){
-      var o = c.createOscillator(), g = c.createGain();
-      o.connect(g); g.connect(c.destination); o.type='sine';
-      o.frequency.setValueAtTime(1800,n); g.gain.setValueAtTime(.015,n); g.gain.exponentialRampToValueAtTime(.001,n+.025);
-      o.start(n); o.stop(n+.025);
-    }
-  }catch(e){}
-}
-function toggleSnd(){
-  sOn = !sOn;
-  var b = document.getElementById('sndBtn');
-  b.textContent = sOn ? '🔊' : '🔇';
-  b.classList.toggle('off', !sOn);
-  if(sOn) sfx('click');
-}
-
-var cv = document.getElementById('bg'), cx = cv.getContext('2d'), W, H, pts = [];
-function rsz(){ W = cv.width = innerWidth; H = cv.height = innerHeight; mkP(); }
-function mkP(){
-  pts=[];
-  var n = Math.min(48, Math.floor(W*H/18000));
-  for(var i=0;i<n;i++) pts.push({
-    x:Math.random()*W,y:Math.random()*H,r:Math.random()*.9+.2,a:Math.random(),
-    da:(Math.random()-.5)*.003,vx:(Math.random()-.5)*.06,vy:(Math.random()-.5)*.06
+  function now(){
+    var d = new Date();
+    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+  }
+  function openWa(text){
+    window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(text),"_blank","noopener,noreferrer");
+  }
+  function order(pkg){
+    var text = "Bang mau sewa bot WhatsApp";
+    if(pkg === "Starter") text = "Bang mau sewa bot WA paket STARTER 2 hari (Rp 3.000)";
+    if(pkg === "Weekly") text = "Bang mau sewa bot WA paket WEEKLY 1 minggu (Rp 5.000)";
+    if(pkg === "Monthly") text = "Bang mau sewa bot WA paket MONTHLY 1 bulan (Rp 20.000)";
+    openWa(text);
+  }
+  document.querySelectorAll("[data-order]").forEach(function(el){
+    el.addEventListener("click",function(){ order(el.getAttribute("data-order")); });
   });
-}
-rsz(); addEventListener('resize', rsz);
-var mx = innerWidth/2, my = innerHeight/2, ft = 0;
-addEventListener('mousemove', function(e){ mx = e.clientX; my = e.clientY; });
-addEventListener('touchmove', function(e){ mx = e.touches[0].clientX; my = e.touches[0].clientY; }, { passive:true });
-function draw(){
-  cx.clearRect(0,0,W,H);
-  cx.fillStyle='#060a12'; cx.fillRect(0,0,W,H);
 
-  var g1 = cx.createRadialGradient(mx*.2+W*.35, my*.1+H*.25, 0, mx*.2+W*.35, my*.1+H*.25, W*.35);
-  g1.addColorStop(0,'rgba(255,255,255,.018)'); g1.addColorStop(1,'transparent');
-  cx.fillStyle = g1; cx.fillRect(0,0,W,H);
+  function renderStats(){
+    botNum.textContent = fmt.format(stats.bot);
+    msgNum.textContent = fmt.format(stats.msg);
+    upNum.textContent = stats.up + "%";
+    heroMetric.textContent = fmt.format(stats.group);
+    orderNum.textContent = fmt.format(stats.order);
+    spamNum.textContent = fmt.format(stats.spam);
+  }
+  function tickStats(){
+    var msgChange = 9 + Math.floor(Math.random()*21);
+    var orderChange = Math.random() > .78 ? 1 : 0;
+    stats.msg += msgChange;
+    stats.bot = Math.max(302,Math.min(355,stats.bot + (Math.random() > .8 ? -1 : 1)));
+    stats.group = Math.max(830,Math.min(880,stats.group + (Math.random() > .76 ? 1 : 0)));
+    stats.spam += Math.random() > .58 ? 1 : 0;
+    stats.order += orderChange;
+    stats.up = Math.random() > .88 ? 98 : 99;
+    orderDelta.textContent = orderChange ? "+1" : "stable";
+    renderStats();
+  }
+  renderStats();
+  if(!reduceMotion) setInterval(tickStats,4700);
 
-  var g2 = cx.createRadialGradient(W-mx*.1, H-my*.08, 0, W-mx*.1, H-my*.08, W*.3);
-  g2.addColorStop(0,'rgba(255,255,255,.01)'); g2.addColorStop(1,'transparent');
-  cx.fillStyle = g2; cx.fillRect(0,0,W,H);
+  var feedData = [
+    ["ok","✓","anti-link blokir promosi liar"],
+    ["warn","!","status grup dibersihkan"],
+    ["ok","✓","downloader selesai diproses"],
+    ["ok","✓","member baru disambut"],
+    ["danger","!","flood chat ditahan"],
+    ["ok","✓","mini game selesai tanpa error"]
+  ];
+  function pushFeed(){
+    var d = feedData[Math.floor(Math.random()*feedData.length)];
+    var row = document.createElement("div");
+    row.className = "feed-row";
+    var mark = document.createElement("i");
+    mark.className = d[0];
+    mark.textContent = d[1];
+    var txt = document.createElement("span");
+    txt.innerHTML = "<b>" + now() + "</b> " + d[2];
+    row.appendChild(mark);
+    row.appendChild(txt);
+    feed.appendChild(row);
+    while(feed.children.length > 5) feed.removeChild(feed.firstChild);
+  }
+  for(var i=0;i<4;i++) setTimeout(pushFeed, reduceMotion ? 0 : i*260);
+  if(!reduceMotion) setInterval(pushFeed,3300);
 
-  cx.strokeStyle='rgba(255,255,255,.005)'; cx.lineWidth=.5;
-  var gs = 90, ox = (ft*.05)%gs, oy = (ft*.03)%gs;
-  for(var x=-gs+ox;x<W+gs;x+=gs){ cx.beginPath(); cx.moveTo(x,0); cx.lineTo(x,H); cx.stroke(); }
-  for(var y=-gs+oy;y<H+gs;y+=gs){ cx.beginPath(); cx.moveTo(0,y); cx.lineTo(W,y); cx.stroke(); }
-
-  for(var i=0;i<pts.length;i++){
-    var p=pts[i];
-    p.a += p.da; if(p.a>1||p.a<.1) p.da *= -1;
-    p.x += p.vx; p.y += p.vy;
-    if(p.x<-5) p.x=W+5; if(p.x>W+5) p.x=-5; if(p.y<-5) p.y=H+5; if(p.y>H+5) p.y=-5;
-    cx.beginPath(); cx.arc(p.x,p.y,Math.max(.1,p.r),0,Math.PI*2);
-    cx.fillStyle='rgba(255,255,255,'+(p.a*.23)+')'; cx.fill();
+  var toastData = [
+    ["🔗","Link diblokir","Spam promosi berhasil dicegah"],
+    ["🧹","Status bersih","Auto hapus status grup aktif"],
+    ["💰","Order masuk","Paket Monthly dipilih"],
+    ["🛡️","Guard aktif","Flood chat terdeteksi"],
+    ["🎮","Game selesai","Quiz grup berhasil diproses"]
+  ];
+  function toast(){
+    var d = toastData[Math.floor(Math.random()*toastData.length)];
+    var el = document.createElement("div");
+    el.className = "toast";
+    var ic = document.createElement("div");
+    ic.className = "toast-ic";
+    ic.textContent = d[0];
+    var body = document.createElement("div");
+    var strong = document.createElement("strong");
+    strong.textContent = d[1];
+    var span = document.createElement("span");
+    span.textContent = d[2];
+    body.appendChild(strong);
+    body.appendChild(span);
+    el.appendChild(ic);
+    el.appendChild(body);
+    toastWrap.appendChild(el);
+    setTimeout(function(){ el.classList.add("out"); setTimeout(function(){ el.remove(); },220); },3100);
+  }
+  if(!reduceMotion){
+    setTimeout(toast,2400);
+    setInterval(toast,12400);
   }
 
-  cx.lineWidth=.2;
-  for(var a=0;a<pts.length;a++) for(var b=a+1;b<pts.length;b++){
-    var dx=pts[a].x-pts[b].x, dy=pts[a].y-pts[b].y, d=dx*dx+dy*dy;
-    if(d<4200){
-      var alpha=(1-d/4200)*.03*Math.min(pts[a].a,pts[b].a);
-      cx.beginPath(); cx.moveTo(pts[a].x,pts[a].y); cx.lineTo(pts[b].x,pts[b].y);
-      cx.strokeStyle='rgba(255,255,255,'+alpha+')'; cx.stroke();
-    }
+  var robot = document.getElementById("robot");
+  var tips = [
+    "Monthly Rp 20K. Paling cocok buat grup aktif.",
+    "Starter Rp 3K cocok buat tes dulu.",
+    "Anti link, guard, downloader, dan game dalam satu bot.",
+    "Tap order buat langsung masuk WhatsApp admin.",
+    "Desain ini ringan tanpa canvas berat."
+  ];
+  var tipIndex = 0;
+  function showBubble(text){
+    bubble.textContent = text || tips[tipIndex++ % tips.length];
+    bubble.classList.add("show");
+    setTimeout(function(){ bubble.classList.remove("show"); },3000);
   }
-  ft++; requestAnimationFrame(draw);
-}
-draw();
-
-var botAktif = 312, pesanJam = 2881, uptime = 99;
-var n1El = document.getElementById('n1'), n2El = document.getElementById('n2'), n3El = document.getElementById('n3');
-var ch1El = document.getElementById('ch1'), ch2El = document.getElementById('ch2'), ch3El = document.getElementById('ch3');
-function fmtNum(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
-function flashEl(el,dir){ el.classList.remove('flash-up','flash-down'); void el.offsetWidth; el.classList.add(dir==='up' ? 'flash-up' : 'flash-down'); }
-function updateBotAktif(){
-  var old = botAktif, r = Math.random();
-  if(r < .7) botAktif += Math.floor(Math.random()*3)+1;
-  else if(r < .9) botAktif -= Math.floor(Math.random()*2)+1;
-  if(botAktif < 300) botAktif = 302 + Math.floor(Math.random()*4);
-  if(botAktif > 350) botAktif = 345 - Math.floor(Math.random()*5);
-  n1El.textContent = fmtNum(botAktif);
-  var diff = botAktif-old;
-  if(diff>0){ ch1El.textContent='+'+diff; ch1El.className='s-change up'; }
-  else if(diff<0){ ch1El.textContent=String(diff); ch1El.className='s-change down'; }
-  else{ ch1El.textContent=''; }
-  flashEl(n1El, diff>=0 ? 'up' : 'down');
-  if(diff!==0) sfx('tick');
-}
-function updatePesanJam(){
-  var old = pesanJam;
-  pesanJam += Math.floor(Math.random()*10)+3;
-  n2El.textContent = fmtNum(pesanJam);
-  var diff = pesanJam-old;
-  ch2El.textContent = '+'+diff;
-  ch2El.className = 's-change up';
-  flashEl(n2El, 'up');
-}
-function updateUptime(){
-  var old = uptime, r = Math.random();
-  uptime = r < .6 ? 99 : r < .85 ? 98 : 99;
-  n3El.textContent = uptime+'%';
-  var diff = uptime-old;
-  if(diff>0){ ch3El.textContent='+'+diff+'%'; ch3El.className='s-change up'; }
-  else if(diff<0){ ch3El.textContent=diff+'%'; ch3El.className='s-change down'; }
-  else{ ch3El.textContent='stable'; ch3El.className='s-change up'; }
-  flashEl(n3El, diff>=0 ? 'up' : 'down');
-}
-n1El.textContent = fmtNum(botAktif); n2El.textContent = fmtNum(pesanJam); n3El.textContent = uptime+'%';
-setInterval(updateBotAktif, 6000);
-setInterval(updatePesanJam, 3200);
-setInterval(updateUptime, 9000);
-
-var logL = [
-  {h:'<span class="p">xobe</span><span class="c">$</span> <span class="d">connecting whatsapp...</span>',dl:400},
-  {h:'<span class="p">✓</span> <span class="o">Koneksi terestablish</span>',dl:500},
-  {h:'<span class="p">✓</span> <span class="o">'+fmtNum(botAktif)+' bot loaded</span>',dl:350},
-  {h:'<span class="p">xobe</span><span class="c">$</span> <span class="d">loading modules...</span>',dl:300},
-  {h:'<span class="p">  →</span> <span class="o">anti-link</span> <span class="d">[on]</span>',dl:150},
-  {h:'<span class="p">  →</span> <span class="o">auto-delete</span> <span class="d">[on]</span>',dl:130},
-  {h:'<span class="p">  →</span> <span class="o">bot-guard</span> <span class="d">[on]</span>',dl:130},
-  {h:'<span class="p">  →</span> <span class="o">welcome-msg</span> <span class="d">[on]</span>',dl:100},
-  {h:'<span class="p">  →</span> <span class="o">mini-games</span> <span class="d">[on]</span>',dl:100},
-  {h:'<span class="p">  →</span> <span class="o">downloader</span> <span class="d">[on]</span>',dl:100},
-  {h:'<span class="w">⚠</span> <span class="o">Monitoring 847 grup</span>',dl:250},
-  {h:'<span class="p">xobe</span><span class="c">$</span> <span class="p">Ready.</span><span class="curb"></span>',dl:300}
-];
-var logB = document.getElementById('logB'), li = 0;
-function addL(){
-  if(li >= logL.length){
-    var ups = [
-      '<span class="d">['+new Date().toLocaleTimeString('id-ID')+']</span> <span class="o">'+fmtNum(pesanJam)+' msgs , 0 errors</span>',
-      '<span class="d">['+new Date().toLocaleTimeString('id-ID')+']</span> <span class="er">Blocked 3 spam links</span>',
-      '<span class="d">['+new Date().toLocaleTimeString('id-ID')+']</span> <span class="p">Auto-deleted status , 12 grp</span>',
-      '<span class="d">['+new Date().toLocaleTimeString('id-ID')+']</span> <span class="o">New bot: GRUP-KELAS-9A</span>',
-      '<span class="d">['+new Date().toLocaleTimeString('id-ID')+']</span> <span class="p">RAM 23% CPU 8%</span>',
-      '<span class="d">['+new Date().toLocaleTimeString('id-ID')+']</span> <span class="er">Kicked spammer: +62***45</span>'
-    ];
-    var liveLine = document.createElement('div');
-    liveLine.className='ln';
-    liveLine.innerHTML = ups[Math.floor(Math.random()*ups.length)];
-    logB.appendChild(liveLine); sfx('type');
-    while(logB.children.length > 12) logB.removeChild(logB.firstChild);
-    logB.scrollTop = logB.scrollHeight;
-    setTimeout(addL, 3600 + Math.random()*2800);
-    return;
+  if(robot) robot.addEventListener("click",function(){ showBubble(); });
+  if(!reduceMotion){
+    setTimeout(showBubble,2200);
+    setInterval(showBubble,9600);
   }
-  var l = document.createElement('div');
-  l.className='ln'; l.innerHTML = logL[li].h; logB.appendChild(l); sfx('type');
-  logB.scrollTop = logB.scrollHeight; li++;
-  setTimeout(addL, logL[li-1].dl);
-}
-setTimeout(addL, 800);
 
-var chatSets = [
-  [
-    {t:'ur',m:'Halo bot, aktif?',d:0},
-    {t:'bt',m:'Halo kak. Aktif 24/7. Sekarang jaga '+fmtNum(botAktif)+' grup.',d:1700},
-    {t:'ur',m:'Fitur anti link bisa?',d:3900},
-    {t:'bt',m:'Bisa. Link spam auto kehapus dan pengirim bisa kena peringatan atau ban.',d:5600},
-    {t:'ur',m:'Harga bulanan berapa?',d:8200},
-    {t:'bt',m:'Rp 20.000 per bulan. Sudah all access dan prioritas support.',d:9800},
-    {t:'ur',m:'Oke, menarik.',d:12200},
-    {t:'bt',m:'Siap. Tinggal klik ORDER VIA WHATSAPP buat setup cepat.',d:13800}
-  ],
-  [
-    {t:'ur',m:'Bang, bot bisa hapus status grup otomatis?',d:0},
-    {t:'bt',m:'Bisa banget. Fitur ini paling sering dipakai biar grup tetap bersih.',d:1900},
-    {t:'ur',m:'Ada mini game juga?',d:4300},
-    {t:'bt',m:'Ada. Tebak gambar, suit, quiz, dan game santai lain buat ramein grup.',d:6200},
-    {t:'ur',m:'Kalau mau trial?',d:8900},
-    {t:'bt',m:'Mulai dari paket Starter 2 hari. Cocok buat tes dulu.',d:10700},
-    {t:'ur',m:'Sip, saya coba dulu.',d:13200},
-    {t:'bt',m:'Gas. Admin standby buat bantu pasangin.',d:14800}
-  ],
-  [
-    {t:'ur',m:'Bot ini buat grup jualan cocok?',d:0},
-    {t:'bt',m:'Cocok. Bisa bantu jaga chat tetap rapi, aman, dan cepat respon.',d:1800},
-    {t:'ur',m:'Downloader jalan juga?',d:4100},
-    {t:'bt',m:'Jalan. Tinggal kirim link TikTok, IG, atau YouTube langsung diproses.',d:5900},
-    {t:'ur',m:'Support cepat ga?',d:8600},
-    {t:'bt',m:'Cepat. Paket Monthly dapat prioritas support.',d:10100},
-    {t:'ur',m:'Mantap, ambil monthly.',d:12800},
-    {t:'bt',m:'Siap. Klik tombol order dan admin lanjut prosesnya.',d:14400}
-  ]
-];
-var chatQ = chatSets[Math.floor(Math.random()*chatSets.length)];
-var cMsgs = document.getElementById('cMsgs'), cSt = document.getElementById('cSt'), ci = 0;
-function typI(){
-  cSt.textContent='sedang mengetik...';
-  var d = document.createElement('div');
-  d.className='typ';
-  d.id='typI';
-  d.innerHTML='<span></span><span></span><span></span>';
-  cMsgs.appendChild(d); cMsgs.scrollTop = cMsgs.scrollHeight;
-}
-function rmT(){ var t=document.getElementById('typI'); if(t) t.remove(); }
-function addCM(m){
-  rmT();
-  if(m.t==='bt'){ cSt.textContent='online'; sfx('msg'); } else { sfx('notif'); }
-  var d = document.createElement('div');
-  d.className='cm '+(m.t==='bt' ? 'bt' : 'ur');
-  var ts = new Date(), tm = String(ts.getHours()).padStart(2,'0')+':'+String(ts.getMinutes()).padStart(2,'0');
-  var ck = m.t==='bt' ? '<span class="ck">✓✓</span>' : '';
-  d.innerHTML = m.m + '<div class="ct">' + tm + ck + '</div>';
-  cMsgs.appendChild(d);
-  while(cMsgs.children.length > 8) cMsgs.removeChild(cMsgs.firstChild);
-  cMsgs.scrollTop = cMsgs.scrollHeight;
-}
-function refreshChatSet(){
-  chatQ = chatSets[Math.floor(Math.random()*chatSets.length)];
-}
-function runC(){
-  if(ci >= chatQ.length){
-    setTimeout(function(){
-      cMsgs.innerHTML='';
-      ci=0;
-      refreshChatSet();
-      runC();
-    }, 6200);
-    return;
-  }
-  var m = chatQ[ci];
-  if(m.t==='bt'){
-    typI();
-    var typingTime = 900 + Math.min(1200, m.m.length * 14) + Math.random()*280;
-    setTimeout(function(){ addCM(m); }, typingTime);
+  var reveals = document.querySelectorAll(".reveal");
+  if("IntersectionObserver" in window && !reduceMotion){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){ if(entry.isIntersecting){ entry.target.classList.add("show"); obs.unobserve(entry.target); } });
+    },{threshold:.08});
+    reveals.forEach(function(el){ obs.observe(el); });
   }else{
-    cSt.textContent='online';
-    addCM(m);
+    reveals.forEach(function(el){ el.classList.add("show"); });
   }
-  ci++;
-  var nxt = ci < chatQ.length ? chatQ[ci].d - m.d : 6200;
-  setTimeout(runC, Math.max(nxt, 700));
-}
-setTimeout(runC, 2200);
-
-var tD = [
-  {i:'🤖',t:'Bot Deployed',d:'GRUP-KELAS-9A , SMAN 1'},
-  {i:'🔗',t:'Link Diblokir',d:'+62***8901 kirim link spam'},
-  {i:'🧹',t:'Status Dihapus',d:'15 grup dibersihkan otomatis'},
-  {i:'🛡️',t:'Flood Detected',d:'GRUP-RT04 , auto mute 5m'},
-  {i:'💰',t:'Order Masuk',d:'Paket Monthly , Rp 20.000'},
-  {i:'🎮',t:'Game Selesai',d:'Tebak Gambar , @dimas menang'},
-  {i:'📊',t:'Uptime Check',d:'99.97% , semua bot stabil'},
-  {i:'👋',t:'Member Join',d:'5 member baru GRUP-KELUARGA'},
-  {i:'⚡',t:'Fast Reply Aktif',d:'Response rate naik 18% hari ini'},
-  {i:'⭐',t:'Priority Support',d:'Admin respon rata-rata 2 menit'},
-  {i:'🎵',t:'Download Selesai',d:'TikTok no watermark berhasil diproses'},
-  {i:'🧠',t:'AI Reply Ready',d:'Mode balas cerdas aktif di 12 grup'}
-];
-var tC = document.getElementById('toasts'), tI = 0;
-function showT(){
-  var d = tD[tI % tD.length], t = document.createElement('div');
-  t.className='toast';
-  var ts = new Date(), tm = String(ts.getHours()).padStart(2,'0')+':'+String(ts.getMinutes()).padStart(2,'0')+':'+String(ts.getSeconds()).padStart(2,'0');
-  t.innerHTML='<div class="ti">'+d.i+'</div><div class="ttx"><div class="ttl">'+d.t+'</div><div class="tds">'+d.d+'</div></div><div class="ttm">'+tm+'</div>';
-  tC.appendChild(t); sfx('toast');
-  setTimeout(function(){ t.classList.add('out'); setTimeout(function(){ t.remove(); }, 250); }, 3800);
-  tI++; setTimeout(showT, 15000);
-}
-setTimeout(showT, 4500);
-
-var roboBub = document.getElementById('roboBubble');
-var roboMsgs = [
-  'Butuh bantuan? Tap aku.',
-  'Bot ini lagi jaga '+fmtNum(botAktif)+' grup.',
-  'Harga mulai Rp 3K.',
-  'Anti link dan auto hapus status aktif.',
-  'Order sekarang yuk.',
-  'Online 24/7.',
-  'Ada game buat grup juga.',
-  'Download video langsung dari chat.',
-  'Paket Monthly paling ramai dipilih.',
-  'Support prioritas aktif untuk paket premium.'
-];
-var rbI = 0, rbTimer = null;
-function showBub(){
-  roboMsgs[1] = 'Bot ini lagi jaga '+fmtNum(botAktif)+' grup.';
-  roboBub.textContent = roboMsgs[rbI % roboMsgs.length];
-  roboBub.classList.add('show');
-  sfx('robo');
-  clearTimeout(rbTimer);
-  rbTimer = setTimeout(function(){
-    roboBub.classList.remove('show');
-    rbI++;
-    setTimeout(showBub, 7000 + Math.random()*5000);
-  }, 3200);
-}
-setTimeout(showBub, 5500);
-function roboTap(){
-  sfx('pop');
-  roboBub.classList.remove('show');
-  clearTimeout(rbTimer);
-  rbI = Math.floor(Math.random()*roboMsgs.length);
-  roboBub.textContent = roboMsgs[rbI % roboMsgs.length];
-  roboBub.classList.add('show');
-  rbTimer = setTimeout(function(){
-    roboBub.classList.remove('show');
-    rbI++;
-    setTimeout(showBub, 6000);
-  }, 2800);
-}
-document.getElementById('roboCorner').addEventListener('keydown', function(e){
-  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); roboTap(); }
-});
-
-function order(pkg){
-  sfx('success');
-  var wa='6283141707524', m='Bang mau sewa bot WhatsApp';
-  if(pkg==='Starter') m='Bang mau sewa bot WA paket STARTER 2 hari (Rp 3.000)';
-  else if(pkg==='Weekly') m='Bang mau sewa bot WA paket WEEKLY 1 minggu (Rp 5.000)';
-  else if(pkg==='Monthly') m='Bang mau sewa bot WA paket MONTHLY 1 bulan (Rp 20.000)';
-  window.open('https://wa.me/'+wa+'?text='+encodeURIComponent(m),'_blank');
-}
-
-document.querySelectorAll('.pc,.fc').forEach(function(el){
-  el.addEventListener('mouseenter', function(){ sfx('hover'); }, { passive:true });
-});
-document.querySelectorAll('.pc').forEach(function(el){
-  el.addEventListener('touchstart', function(){ sfx('click'); }, { passive:true });
-});
-
-var obs = new IntersectionObserver(function(es){
-  es.forEach(function(e){
-    if(e.isIntersecting){
-      e.target.style.opacity='1';
-      e.target.style.transform='translateY(0)';
-    }
-  });
-}, { threshold:.08, rootMargin:'0px 0px -10px 0px' });
-
-document.querySelectorAll('.log-s,.cbox,.pc,.fc').forEach(function(el){
-  el.style.opacity='0';
-  el.style.transform='translateY(12px)';
-  el.style.transition='opacity .35s ease, transform .35s ease';
-  obs.observe(el);
-});
+})();
 </script>
 </body>
 </html>
